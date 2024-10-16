@@ -75,7 +75,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 // POST  /auth/login - Verifies accountEmail and password and returns a JWT
-router.post("/login", (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   const { accountEmail, password } = req.body;
 
   // Check if accountEmail or password are provided as empty string
@@ -84,39 +84,38 @@ router.post("/login", (req, res, next) => {
     return;
   }
 
-  // Check the users collection if a user with the same accountEmail exists
-  User.findOne({ accountEmail })
-    .then((foundUser) => {
-      if (!foundUser) {
-        // If the user is not found, send an error response
-        res.status(401).json({ message: "User not found." });
-        return;
-      }
+  try {
+    const foundUser = await User.findOne({accountEmail: accountEmail})
+    console.log(foundUser)
 
-      // Compare the provided password with the one saved in the database //! Diferente a nuestro codigo de clase, tenerlo en mente si nos saltan errores
-      const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
+    if(!foundUser){
+      res.status(400).json({message: "User not found"})
+      return 
+    }
 
-      if (passwordCorrect) {
-        // Deconstruct the user object to omit the password
-        const { _id, accountEmail, username } = foundUser;
+    const isPasswordCorrect = await bcrypt.compare(password, foundUser.password)
 
-        // Create an object that will be set as the token payload
-        const payload = { _id, accountEmail, username };
+    if(!isPasswordCorrect){
+      res.status(400).json({message: "Wrong password"})
+      return 
+    }
 
-        // Create a JSON Web Token and sign it
-        const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-          algorithm: "HS256",
-          expiresIn: "6h",
-        });
+    const payload = {
+      _id: foundUser._id,
+      accountEmail: foundUser.accountEmail
+    }
 
-        // Send the token as the response
-        res.status(200).json({ authToken: authToken });
-      } else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
-      }
+    const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "7d"
     })
-    .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
-});
+
+    res.status(200).json({authToken: authToken})
+
+  } catch (error) {
+    next(error)
+  }
+})
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 router.get("/verify", isAuthenticated, (req, res, next) => {
