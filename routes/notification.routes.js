@@ -23,7 +23,7 @@ router.get("/", async(req, res, next) => {
 //* ROUTES POST
 router.post("/", async(req, res, next) => {
   try {
-    const response = await Project.create({
+    const response = await Notification.create({
       from: req.body.from,
       to: req.body.to,
       project: req.body.project,

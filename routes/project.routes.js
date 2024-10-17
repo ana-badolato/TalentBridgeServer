@@ -59,7 +59,7 @@ router.post("/", async(req, res, next) => {
       title: req.body.title,
       description: req.body.description,
       mainObjective: req.body.mainObjective,
-      location: req.body.mainObjective,
+      location: req.body.location,
       startDate: req.body.startDate,
       image: req.body.image,
       category: req.body.category,
