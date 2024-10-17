@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
-const userSchema = new Schema(
+const eventSchema = new Schema(
   { 
     name: {
       type: String,
@@ -16,18 +16,19 @@ const userSchema = new Schema(
       required: [true, "The date of the event is required"]
     },
     time: {
-      type: Time,
-      required: [true, "The time of the event is required"]
-    },
-    address: {
+  type: String,
+  required: [true, "The time of the event is required"],
+  match: [/^([01]\d|2[0-3]):([0-5]\d)$/, "Please enter a valid time in HH:mm format"],
+},
+    address: {//! Revisar cuando implementemos leaflet
       type: String,
       required: [true, "The event's address is required"]
     },
-    /* coordinates:{
-      type: Number,
-      //!require: 
-    }
- */ category: {
+    location: {
+      lat: Number,
+      lng: Number,
+    },
+      category: {
       type : String
     },
     capacity:{
@@ -66,19 +67,22 @@ const userSchema = new Schema(
       default: "https://www.quantumpostcards.com/media/dol/design/1/1537290012050012774925883.png"
     },
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true
     },
     lecturer: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User"
+      type: [Schema.Types.ObjectId],
+      ref: "User", 
+      default: function (){
+        return this.owner
+      },
     },
     atendees:{
-      type: [mongoose.Schema.Types.ObjectId]
+      type: [Schema.Types.ObjectId]
     },
     relatedProjects: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
     },
     isPublic: {
       type: Boolean,
@@ -91,6 +95,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = model("User", userSchema);
+const Event = model("Event", eventSchema);
 
-module.exports = User;
+module.exports = Event;

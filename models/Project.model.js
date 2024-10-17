@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
-const userSchema = new Schema(
+const projectSchema = new Schema(
   {
     title: {
       type: String,
@@ -21,9 +21,7 @@ const userSchema = new Schema(
     },
     startDate: {
       type: Date,
-      default: function () {
-        return new Date();
-      },
+      default: Date.now
     },
     image: {
       type: String,
@@ -35,14 +33,13 @@ const userSchema = new Schema(
       required: [true, "Category is required"]
     },
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     teamMembers: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [Schema.Types.ObjectId],
       ref: "User",
-      required: true,
     },
   },
   {
@@ -51,6 +48,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = model("User", userSchema);
+const Project = model("Project", projectSchema);
 
-module.exports = User;
+module.exports = Project;
