@@ -16,10 +16,10 @@ const eventSchema = new Schema(
       required: [true, "The date of the event is required"]
     },
     time: {
-  type: String,
-  required: [true, "The time of the event is required"],
-  match: [/^([01]\d|2[0-3]):([0-5]\d)$/, "Please enter a valid time in HH:mm format"],
-},
+      type: String,
+      required: [true, "The time of the event is required"],
+      match: [/^([01]\d|2[0-3]):([0-5]\d)$/, "Please enter a valid time in HH:mm format"],
+    },
     address: {//! Revisar cuando implementemos leaflet
       type: String,
       required: [true, "The event's address is required"]
@@ -28,8 +28,10 @@ const eventSchema = new Schema(
       lat: Number,
       lng: Number,
     },
-      category: {
-      type : String
+    category: {
+      type: String,
+      enum: ["Technology & Innovation", "Sustainability & Environment", "Art & Creativity", "Health & Wellness", "Education & Training", "Community & Social Impact" ],
+      required: [true, "Category is required"],
     },
     capacity:{
       type: Number,
@@ -83,10 +85,7 @@ const eventSchema = new Schema(
     },
     relatedProjects: {
       type: Schema.Types.ObjectId,
-    },
-    isPublic: {
-      type: Boolean,
-      default: true
+      ref: "Project"
     }
   },
   {

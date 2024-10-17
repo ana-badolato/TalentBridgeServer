@@ -17,4 +17,7 @@ router.use("/project", projectRouter)
 const eventRouter = require("./event.routes")
 router.use("/event", eventRouter)
 
+const notificationRouter = require("./notification.routes")
+router.use("/notification", notificationRouter)
+
 module.exports = router;
