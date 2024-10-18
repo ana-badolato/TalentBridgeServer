@@ -4,8 +4,11 @@ const router = express.Router();
 const Project = require("../models/Project.model");
 const Event = require("../models/Event.model");
 
+// Require necessary (isAuthenticated) middleware in order to control access to specific routes
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+
 //* ROUTES GET
-// GET /api/project/
+// GET /api/project/ -> see all projects, public
 router.get("/", async(req, res, next) => {
   try {
     const response = await Project.find()
@@ -17,7 +20,7 @@ router.get("/", async(req, res, next) => {
 });
 
 
-// GET /api/project/:projectid
+// GET /api/project/:projectid -> project detail, public
 router.get("/:projectid", async(req, res, next) => {
   try {
     const response = await Project.findById(req.params.projectid)
@@ -29,7 +32,7 @@ router.get("/:projectid", async(req, res, next) => {
 });
 
 
-// GET /api/project/category/:category
+// GET /api/project/category/:category -> see al projects by category, public
 router.get("/category/:category", async (req, res, next) => {
   try {
     const projects = await Project.find({ category: req.params.category });
@@ -40,7 +43,7 @@ router.get("/category/:category", async (req, res, next) => {
 })
 
 
-//GET /api/project/:projectid/event
+//GET /api/project/:projectid/event -> see all project's events, public
 router.get("/:projectid/event", async (req, res, next) =>{
   try {
     const events = await Event.find({relatedProjects: req.params.projectid})
@@ -52,8 +55,8 @@ router.get("/:projectid/event", async (req, res, next) =>{
 
 
 //* ROUTES POST
-// POST /api/project/
-router.post("/", async(req, res, next) => {
+// POST /api/project/ -> Create new project, private
+router.post("/", isAuthenticated, async(req, res, next) => {
   try {
     const response = await Project.create({
       title: req.body.title,
@@ -75,14 +78,14 @@ router.post("/", async(req, res, next) => {
 
 
 //* ROUTES PUT
-// PUT /api/project/:projectid
-router.put("/:projectid", async (req, res, next) =>{
+// PUT /api/project/:projectid -> edit a project you own
+router.put("/:projectid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Project.findByIdAndUpdate(req.params.projectid, {
       title: req.body.title,
       description: req.body.description,
       mainObjective: req.body.mainObjective,
-      location: req.body.mainObjective,
+      location: req.body.location,
       startDate: req.body.startDate,
       image: req.body.image,
       category: req.body.category,
@@ -97,9 +100,8 @@ router.put("/:projectid", async (req, res, next) =>{
 
 //* ROUTES PATCH
 
-// PATCH /api/project/:projectid/teammember/:userid
-module.exports = router;
-router.patch("/:projectid/teammember/:userid", async (req, res, next) =>{
+// PATCH /api/project/:projectid/teammember/:userid -> remove teamMember from a project you own, private
+router.patch("/:projectid/removeteammember/:userid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Project.findByIdAndUpdate(req.params.projectid, {
       $pull: { teamMembers: req.params.userid }
@@ -110,11 +112,22 @@ router.patch("/:projectid/teammember/:userid", async (req, res, next) =>{
   }
 })
 
+// PATCH /api/project/:projectid/teammember/:userid -> add teamMember to a project you own, private
+router.patch("/:projectid/addteammember/:userid", isAuthenticated, async (req, res, next) =>{
+  try {
+    const response = await Project.findByIdAndUpdate(req.params.projectid, {
+      $push: { teamMembers: req.params.userid }
+    }, {new: true})
+    res.status(202).json(response)
+  } catch (error) {
+    next(error)
+  }
+})
 
 //* ROUTES DELETE
 
-// DELETE  /api/project/:projectid
-router.delete("/:projectid", async(req, res, next) => {
+// DELETE  /api/project/:projectid -> delete a project you own
+router.delete("/:projectid", isAuthenticated, async(req, res, next) => {
   try {
     await Project.findByIdAndDelete(req.params.projectid)
     res.sendStatus(202)

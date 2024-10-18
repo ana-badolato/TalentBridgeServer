@@ -20,8 +20,8 @@ router.get("/", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/:userid -> un usario en concreto (por id)
-router.get("/:userid", isAuthenticated, async (req, res, next)=>{
+// GET /api/user/:userid -> user details with id
+router.get("/:userid", async (req, res, next)=>{
   try {
     const response = await User.findById(req.params.userid);
     res.status(200).json(response);
@@ -31,7 +31,7 @@ router.get("/:userid", isAuthenticated, async (req, res, next)=>{
 })
 
 
-// GET /api/user/:userid/project
+// GET /api/user/:userid/project -> all user's projects
 router.get("/:userid/project", async (req, res, next)=>{
   try {
     const projects = await Project.find({
@@ -44,7 +44,7 @@ router.get("/:userid/project", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/:userid/event
+// GET /api/user/:userid/event -> all user's events
 router.get("/:userid/event", async (req, res, next)=>{
   try {
     const event = await Event.find({
@@ -57,7 +57,7 @@ router.get("/:userid/event", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/project/:projectid -> todos los usuarios de un proyecto
+// GET /api/user/project/:projectid -> all project's users
 router.get("/project/:projectid", async (req, res, next) => {
   try {
     
@@ -76,7 +76,7 @@ router.get("/project/:projectid", async (req, res, next) => {
   }
 });
 
-// GET /api/user/event/:eventid -> los usuarios de un evento (speaker y propietario)
+// GET /api/user/event/:eventid -> event's users (owner and speaker)
 router.get("/event/:eventid", async (req,res,next) => {
   try {
     const event = await Event.findById(req.params.eventid)
@@ -94,7 +94,7 @@ router.get("/event/:eventid", async (req,res,next) => {
 })
 
 
-// GET api/user/:userid/project/owned -> de que proyectos es propietario un usuario
+// GET api/user/:userid/project/owned -> which projects a user owns
 router.get("/:userid/project/owned", async (req, res, next)=>{
   try {
     const userid = req.params.userid;
@@ -108,8 +108,8 @@ router.get("/:userid/project/owned", async (req, res, next)=>{
 
 
 //* ROUTES PUT
-// PUT /api/user/:userid
-router.put("/:userid", async (req, res, next) =>{
+// PUT /api/user/:userid -> edit user
+router.put("/:userid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await User.findByIdAndUpdate(req.params.userid, {
       username: req.body.username,

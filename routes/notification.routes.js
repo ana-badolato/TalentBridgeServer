@@ -5,13 +5,15 @@ const Notification = require("../models/Notification.model");
 const Project = require("../models/Project.model");
 const Event = require("../models/Event.model");
 
+// Require necessary (isAuthenticated) middleware in order to control access to specific routes
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 // GET All Notification
 // POST new Notification
 // DELETE Notification
 //* ROUTES GET
-router.get("/", async(req, res, next) => {
+router.get("/:userid", isAuthenticated, async(req, res, next) => {
   try {
-    const response = await Notification.find()
+    const response = await Notification.find({to: req.params.userid})
     res.status(200).json(response);
   }
   catch (error){
@@ -21,7 +23,7 @@ router.get("/", async(req, res, next) => {
 
 
 //* ROUTES POST
-router.post("/", async(req, res, next) => {
+router.post("/", isAuthenticated, async(req, res, next) => {
   try {
     const response = await Notification.create({
       from: req.body.from,
@@ -38,7 +40,7 @@ router.post("/", async(req, res, next) => {
 
 
 //* ROUTES DELETE
-router.delete("/:notificationid", async(req, res, next) => {
+router.delete("/:notificationid", isAuthenticated, async(req, res, next) => {
   try {
     await Notification.findByIdAndDelete(req.params.notificationid)
     res.sendStatus(202)

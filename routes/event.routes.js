@@ -4,10 +4,12 @@ const router = express.Router();
 const Event = require("../models/Event.model");
 const Project = require("../models/Project.model");
 
+// Require necessary (isAuthenticated) middleware in order to control access to specific routes
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 //*ROUTES
 
-//GET /api/event/
+//GET /api/event/ -> all event, public
 router.get("/", async (req, res, next) => {
   Event.find({})
     try{
@@ -19,7 +21,7 @@ router.get("/", async (req, res, next) => {
 
 })
 
-//GET /api/event/:eventid
+//GET /api/event/:eventid -> Event details, public
 router.get("/:eventid", async (req, res, next) =>{
   try {
     const response = await Event.findById(req.params.eventid)
@@ -31,8 +33,8 @@ router.get("/:eventid", async (req, res, next) =>{
 
 
 //POST
-// POST /api/event/
-router.post("/", async(req,res,next)=>{
+// POST /api/event/ -> new event, private
+router.post("/", isAuthenticated, async(req,res,next)=>{
   try {
     const response = await Event.create ({
       name: req.body.name,
@@ -62,7 +64,7 @@ router.post("/", async(req,res,next)=>{
 //* ROUTES PUT
 
 //PUT /api/event/:eventid
-router.put("/:eventid", async (req, res, next) =>{
+router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Event.findByIdAndUpdate(req.params.eventid,{
       name: req.body.name,
@@ -91,8 +93,8 @@ router.put("/:eventid", async (req, res, next) =>{
 
 //*ROUTES PATCH
 
-//PATCH  /api/event/:eventid/lecturer/:userid
-router.patch("/:eventid/lecturer/:userid", async (req, res, next) => {
+//PATCH  /api/event/:eventid/lecturer/:userid -> remove an user from an event
+router.patch("/:eventid/removelecturer/:userid", isAuthenticated, async (req, res, next) => {
   try {
     const response = await Event.findByIdAndUpdate( req.params.eventid, { 
         $pull: { lecturer: req.params.userid }
@@ -104,11 +106,26 @@ router.patch("/:eventid/lecturer/:userid", async (req, res, next) => {
   }
 })
 
+// PATCH /api/event/:eventid/lecturer/:userid -> add a user to lecturer array
+router.patch("/:eventid/addlecturer/:userid", isAuthenticated, async (req, res, next)=>{
+  console.log(req.params.userid, req.params.eventid)
+  try {
+    const response = await Event.findByIdAndUpdate( req.params.eventid, { 
+      $push: { lecturer: req.params.userid }
+    }, { new: true } 
+  );
+  
+  res.status(202).json(response);
+} catch (error) {
+    next(error)
+  }
+})
+
 
 //*ROUTES DELETE
 
 //DELETE /api/event/:eventid
-router.delete("/:eventid", async (req, res, next) => {
+router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
   try {
     await Event.findByIdAndDelete(req.params.eventid)
     res.sendStatus(202)
