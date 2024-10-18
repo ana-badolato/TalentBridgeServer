@@ -70,7 +70,7 @@ const eventSchema = new Schema(
     },
     posterImage:{
       type: String,
-      default: "https://www.quantumpostcards.com/media/dol/design/1/1537290012050012774925883.png"
+      default: "https://schemazone.com/wp-content/uploads/2021/03/Project-Manager.jpg"
     },
     owner: {
       type: Schema.Types.ObjectId,

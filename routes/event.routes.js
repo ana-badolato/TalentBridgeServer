@@ -134,6 +134,21 @@ router.patch("/:eventid/addlecturer/:userid", isAuthenticated, async (req, res, 
   }
 })
 
+// PATCH /api/event/:eventid/addatendees/:userid -> add a user to atendees array
+router.patch("/:eventid/addatendees/:userid", isAuthenticated, async (req, res, next)=>{
+  console.log(req.params.userid, req.params.eventid)
+  try {
+    const response = await Event.findByIdAndUpdate( req.params.eventid, { 
+      $push: { atendees: req.params.userid }
+    }, { new: true } 
+  );
+  
+  res.status(202).json(response);
+} catch (error) {
+    next(error)
+  }
+})
+
 
 //*ROUTES DELETE
 
