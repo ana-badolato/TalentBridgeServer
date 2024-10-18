@@ -53,6 +53,18 @@ router.get("/:projectid/event", async (req, res, next) =>{
   }
 })
 
+// GET /api/project/user/:userid -> all user's projects
+router.get("/user/:userid", async (req, res, next)=>{
+  try {
+    const projects = await Project.find({
+      $or: [{ owner: req.params.userid }, { teamMembers: { $in: req.params.userid} }]
+    }).populate("owner","profilePicture username");
+
+    res.status(200).json(projects)
+  } catch (error) {
+    next(error)
+  }
+})
 
 //* ROUTES POST
 // POST /api/project/ -> Create new project, private

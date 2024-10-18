@@ -31,32 +31,6 @@ router.get("/:userid", async (req, res, next)=>{
 })
 
 
-// GET /api/user/:userid/project -> all user's projects
-router.get("/:userid/project", async (req, res, next)=>{
-  try {
-    const projects = await Project.find({
-      $or: [{ owner: req.params.userid }, { teamMembers: req.params.userid }]
-    });
-
-    res.status(200).json(projects)
-  } catch (error) {
-    next(error)
-  }
-})
-
-// GET /api/user/:userid/event -> all user's events
-router.get("/:userid/event", async (req, res, next)=>{
-  try {
-    const event = await Event.find({
-      $or: [{ owner: req.params.userid }, { lecturer: req.params.userid }, { atendees: req.params.userid }]
-    });
-
-    res.status(200).json(event)
-  } catch (error) {
-    next(error)
-  }
-})
-
 // GET /api/user/project/:projectid -> all project's users
 router.get("/project/:projectid", async (req, res, next) => {
   try {

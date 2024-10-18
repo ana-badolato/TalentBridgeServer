@@ -31,6 +31,19 @@ router.get("/:eventid", async (req, res, next) =>{
   }
 })
 
+// GET /api/event/user/:userid -> all user's events
+router.get("/user/:userid", async (req, res, next)=>{
+  try {
+    const event = await Event.find({
+      $or: [{ owner: req.params.userid }, { lecturer: { $in: req.params.userid } }, { atendees: {$in: req.params.userid } } ]
+    }).populate("owner", "profilePicture username")
+    console.log(event)
+    res.status(200).json(event)
+  } catch (error) {
+    next(error)
+  }
+})
+
 
 //POST
 // POST /api/event/ -> new event, private
