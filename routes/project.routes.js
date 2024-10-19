@@ -32,7 +32,7 @@ router.get("/:projectid", async(req, res, next) => {
 });
 
 
-// GET /api/project/category/:category -> see al projects by category, public
+// GET /api/project/category/:category -> returns an array of projects by category
 router.get("/category/:category", async (req, res, next) => {
   try {
     const projects = await Project.find({ category: req.params.category });
@@ -43,7 +43,7 @@ router.get("/category/:category", async (req, res, next) => {
 })
 
 
-//GET /api/project/:projectid/event -> see all project's events, public
+//GET /api/project/:projectid/event -> returns an array of events by project
 router.get("/:projectid/event", async (req, res, next) =>{
   try {
     const events = await Event.find({relatedProjects: req.params.projectid})
@@ -53,7 +53,7 @@ router.get("/:projectid/event", async (req, res, next) =>{
   }
 })
 
-// GET /api/project/user/:userid -> all user's projects
+// GET /api/project/user/:userid -> returns an array of projects by user
 router.get("/user/:userid", async (req, res, next)=>{
   try {
     const projects = await Project.find({
@@ -67,7 +67,7 @@ router.get("/user/:userid", async (req, res, next)=>{
 })
 
 //* ROUTES POST
-// POST /api/project/ -> Create new project, private
+// POST /api/project/ -> Create new project
 router.post("/", isAuthenticated, async(req, res, next) => {
   try {
     const response = await Project.create({
@@ -90,7 +90,7 @@ router.post("/", isAuthenticated, async(req, res, next) => {
 
 
 //* ROUTES PUT
-// PUT /api/project/:projectid -> edit a project you own
+// PUT /api/project/:projectid -> Update the details of a project
 router.put("/:projectid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Project.findByIdAndUpdate(req.params.projectid, {
@@ -112,7 +112,7 @@ router.put("/:projectid", isAuthenticated, async (req, res, next) =>{
 
 //* ROUTES PATCH
 
-// PATCH /api/project/:projectid/teammember/:userid -> remove teamMember from a project you own, private
+// PATCH /api/project/:projectid/removeteammember/:userid -> Removes teamMember from a project
 router.patch("/:projectid/removeteammember/:userid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Project.findByIdAndUpdate(req.params.projectid, {
@@ -124,7 +124,7 @@ router.patch("/:projectid/removeteammember/:userid", isAuthenticated, async (req
   }
 })
 
-// PATCH /api/project/:projectid/teammember/:userid -> add teamMember to a project you own, private
+// PATCH /api/project/:projectid/addteammember/:userid -> Adds a teamMember to a project
 router.patch("/:projectid/addteammember/:userid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Project.findByIdAndUpdate(req.params.projectid, {

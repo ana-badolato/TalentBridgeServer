@@ -7,10 +7,10 @@ const Event = require("../models/Event.model");
 
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
-// GET All Notification
-// POST new Notification
-// DELETE Notification
+
+
 //* ROUTES GET
+//GET /notification/:userid -> Returns an array of notifications from a user
 router.get("/:userid", isAuthenticated, async(req, res, next) => {
   try {
     const response = await Notification.find({to: req.params.userid})
@@ -23,6 +23,7 @@ router.get("/:userid", isAuthenticated, async(req, res, next) => {
 
 
 //* ROUTES POST
+//POST /notification/ -> Creates a new notification
 router.post("/", isAuthenticated, async(req, res, next) => {
   try {
     const response = await Notification.create({
@@ -40,6 +41,7 @@ router.post("/", isAuthenticated, async(req, res, next) => {
 
 
 //* ROUTES DELETE
+//DELETE /notification/:notificationid -> Deletes a notification
 router.delete("/:notificationid", isAuthenticated, async(req, res, next) => {
   try {
     await Notification.findByIdAndDelete(req.params.notificationid)

@@ -9,7 +9,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 //*ROUTES
 
-//GET /api/event/ -> all event, public
+//GET /api/event/ -> Returns an array of all events
 router.get("/", async (req, res, next) => {
   Event.find({})
     try{
@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
 
 })
 
-//GET /api/event/:eventid -> Event details, public
+//GET /api/event/:eventid -> Returns the details of an event
 router.get("/:eventid", async (req, res, next) =>{
   try {
     const response = await Event.findById(req.params.eventid)
@@ -31,7 +31,7 @@ router.get("/:eventid", async (req, res, next) =>{
   }
 })
 
-// GET /api/event/user/:userid -> all user's events
+// GET /api/event/user/:userid -> Returns an array of events by user
 router.get("/user/:userid", async (req, res, next)=>{
   try {
     const event = await Event.find({
@@ -46,7 +46,7 @@ router.get("/user/:userid", async (req, res, next)=>{
 
 
 //POST
-// POST /api/event/ -> new event, private
+// POST /api/event/ -> Creates a new event
 router.post("/", isAuthenticated, async(req,res,next)=>{
   try {
     const response = await Event.create ({
@@ -76,7 +76,7 @@ router.post("/", isAuthenticated, async(req,res,next)=>{
 
 //* ROUTES PUT
 
-//PUT /api/event/:eventid
+//PUT /api/event/:eventid -> Updates the details of an event
 router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Event.findByIdAndUpdate(req.params.eventid,{
@@ -105,8 +105,7 @@ router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
 
 
 //*ROUTES PATCH
-
-//PATCH  /api/event/:eventid/lecturer/:userid -> remove an user from an event
+//PATCH  /api/event/:eventid/removelecturer/:userid -> Removes a lecturer from an event
 router.patch("/:eventid/removelecturer/:userid", isAuthenticated, async (req, res, next) => {
   try {
     const response = await Event.findByIdAndUpdate( req.params.eventid, { 
@@ -119,7 +118,7 @@ router.patch("/:eventid/removelecturer/:userid", isAuthenticated, async (req, re
   }
 })
 
-// PATCH /api/event/:eventid/lecturer/:userid -> add a user to lecturer array
+// PATCH /api/event/:eventid/addlecturer/:userid -> Adds a lecturer to an event
 router.patch("/:eventid/addlecturer/:userid", isAuthenticated, async (req, res, next)=>{
   console.log(req.params.userid, req.params.eventid)
   try {
@@ -134,7 +133,7 @@ router.patch("/:eventid/addlecturer/:userid", isAuthenticated, async (req, res, 
   }
 })
 
-// PATCH /api/event/:eventid/addatendees/:userid -> add a user to atendees array
+// PATCH /api/event/:eventid/addatendees/:userid -> Adds an attendee to an event
 router.patch("/:eventid/addatendees/:userid", isAuthenticated, async (req, res, next)=>{
   console.log(req.params.userid, req.params.eventid)
   try {
@@ -151,8 +150,7 @@ router.patch("/:eventid/addatendees/:userid", isAuthenticated, async (req, res, 
 
 
 //*ROUTES DELETE
-
-//DELETE /api/event/:eventid
+//DELETE /api/event/:eventid -> Deletes an event
 router.delete("/:eventid", isAuthenticated, async (req, res, next) => {
   try {
     await Event.findByIdAndDelete(req.params.eventid)
