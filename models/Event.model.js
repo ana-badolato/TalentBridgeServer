@@ -8,7 +8,7 @@ const eventSchema = new Schema(
       required: [true, "Name is required."],
     },
     mainObjective: {
-      type: [String],
+      type: String,
       maxlength: 250,
     },
     description: {
