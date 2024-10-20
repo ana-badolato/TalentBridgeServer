@@ -36,6 +36,9 @@ const projectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      default: function (){
+        return this.owner
+      },
     },
     teamMembers: {
       type: [Schema.Types.ObjectId],
