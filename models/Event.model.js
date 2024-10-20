@@ -29,8 +29,10 @@ const eventSchema = new Schema(
       required: [true, "The event's address is required"]
     },
     location: {
-      lat: Number,
-      lng: Number,
+      type: {
+        lat: {type: Number, required: true},
+        lng: {type: Number, required: true}
+      }
     },
     category: {
       type: String,
