@@ -11,7 +11,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 // GET /api/project/ -> see all projects, public
 router.get("/", async(req, res, next) => {
   try {
-    const response = await Project.find()
+    const response = await Project.find().populate("owner", "profilePicture username ") 
     res.status(200).json(response);
   }
   catch (error){

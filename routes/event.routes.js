@@ -13,7 +13,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 router.get("/", async (req, res, next) => {
   Event.find({})
     try{
-      const events = await Event.find()
+      const events = await Event.find().populate("owner", "profilePicture username ") 
       res.status(200).json(events);
     } catch(error){
       next(error)
