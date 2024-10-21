@@ -1,29 +1,26 @@
-const { expressjwt: jwt } = require("express-jwt");
+const jwt = require("jsonwebtoken")
 
-// Instantiate the JWT token validation middleware
-const isAuthenticated = jwt({
-  secret: process.env.TOKEN_SECRET,
-  algorithms: ["HS256"],
-  requestProperty: "payload",
-  getToken: getTokenFromHeaders,
-});
+function isAuthenticated(req, res, next) {
 
-// Function used to extract the JWT token from the request's 'Authorization' Headers
-function getTokenFromHeaders(req) {
-  // Check if the token is available on the request Headers
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(" ")[0] === "Bearer"
-  ) {
-    // Get the encoded token string and return it
-    const token = req.headers.authorization.split(" ")[1];
-    return token;
+  console.log(req.headers)
+
+  try {
+
+    const tokenArr = req.headers.authorization.split(" ")
+    const token = tokenArr[1]
+
+    const payload = jwt.verify(token, process.env.TOKEN_SECRET)
+    
+    // console.log(payload)
+    req.payload = payload
+
+    next() // si el token existe y es valido, continua con la ruta
+
+  } catch (error) {
+    res.status(401).json({message: "Token no valido o no existe"})
   }
-
-  return null;
 }
 
-// Export the middleware so that we can use it to create protected routes
 module.exports = {
-  isAuthenticated,
-};
+  isAuthenticated
+}
