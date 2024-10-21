@@ -51,9 +51,6 @@ router.post("/signup", (req, res, next) => {
         res.status(400).json({ message: "User already exists." });
         return;
       }
-      if (foundUser.username === username) {
-        return res.status(400).json({ message: "Username already exists." });
-      }
 
       // If accountEmail is unique, proceed to hash the password
       const salt = bcrypt.genSaltSync(saltRounds);

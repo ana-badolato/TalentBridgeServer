@@ -71,6 +71,7 @@ router.post("/", isAuthenticated, async(req,res,next)=>{
   try {
     const response = await Event.create ({
       name: req.body.name,
+      mainObjective: req.body.mainObjective,
       description: req.body.description,
       date:req.body.date,
       time: req.body.time,
