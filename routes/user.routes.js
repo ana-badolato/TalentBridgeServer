@@ -20,16 +20,25 @@ router.get("/", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/:userid -> user details with id
-router.get("/:userid", async (req, res, next)=>{
+// GET /api/user/profile -> user details with id
+router.get("/profile", isAuthenticated, async (req, res, next)=>{
   try {
-    const response = await User.findById(req.params.userid);
+    const response = await User.findById(req.payload._id);
     res.status(200).json(response);
   } catch (error) {
     next(error)
   }
 })
 
+// GET /api/user/profile/:username -> user details with id
+router.get("/profile/:username", async (req, res, next)=>{
+  try {
+    const response = await User.findOne({ username: req.params.username });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error)
+  }
+})
 
 // GET /api/user/project/:projectid -> all project's users
 router.get("/project/:projectid", async (req, res, next) => {

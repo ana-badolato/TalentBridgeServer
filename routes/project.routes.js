@@ -3,9 +3,9 @@ const router = express.Router();
 
 const Project = require("../models/Project.model");
 const Event = require("../models/Event.model");
-
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+const User = require("../models/User.model.js");
 
 //* ROUTES GET
 // GET /api/project/ -> see all projects, public
@@ -53,11 +53,11 @@ router.get("/:projectid/event", async (req, res, next) =>{
   }
 })
 
-// GET /api/project/user/:userid -> returns an array of projects by user
-router.get("/user/:userid", async (req, res, next)=>{
+// GET /api/project/user/projectsuser -> returns an array of projects by authenticated user
+router.get("/user/projectsuser", isAuthenticated, async (req, res, next)=>{
   try {
     const projects = await Project.find({
-      $or: [{ owner: req.params.userid }, { teamMembers: { $in: req.params.userid} }]
+      $or: [{ owner: req.payload._id }, { teamMembers: { $in: req.payload._id} }]
     }).populate("owner","profilePicture username");
 
     res.status(200).json(projects)
@@ -65,6 +65,28 @@ router.get("/user/:userid", async (req, res, next)=>{
     next(error)
   }
 })
+
+// GET /api/project/user/:username/projects -> returns an array of projects by user
+router.get("/user/:username/projects", async (req, res, next) => {
+  try {
+
+    const user = await User.findOne({ username: req.params.username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const projects = await Project.find({
+      $or: [{ owner: user._id }, { teamMembers: { $in: [user._id] } }]
+    }).populate("owner", "profilePicture username");
+
+    res.status(200).json(projects);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 
 //* ROUTES POST
 // POST /api/project/ -> Create new project

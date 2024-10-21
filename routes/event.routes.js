@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Event = require("../models/Event.model");
 const Project = require("../models/Project.model");
+const User = require("../models/User.model.js");
 
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
@@ -31,11 +32,11 @@ router.get("/:eventid", async (req, res, next) =>{
   }
 })
 
-// GET /api/event/user/:userid -> Returns an array of events by user
-router.get("/user/:userid", async (req, res, next)=>{
+// GET /api/event/user/eventsuser -> Returns an array of events by authenticated user
+router.get("/user/eventsuser", isAuthenticated, async (req, res, next)=>{
   try {
     const event = await Event.find({
-      $or: [{ owner: req.params.userid }, { lecturer: { $in: req.params.userid } }, { atendees: {$in: req.params.userid } } ]
+      $or: [{ owner: req.payload._id }, { lecturer: { $in: req.payload._id } }, { atendees: {$in: req.payload._id } } ]
     }).populate("owner", "profilePicture username")
     console.log(event)
     res.status(200).json(event)
@@ -44,6 +45,25 @@ router.get("/user/:userid", async (req, res, next)=>{
   }
 })
 
+// GET /api/event/user/:username/events -> Returns an array of events by public user
+router.get("/user/:username/events", async (req, res, next)=>{
+  try {
+    const user = await User.findOne({ username: req.params.username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const event = await Event.find({
+      $or: [{ owner: user._id }, { lecturer: { $in: user._id } }, { atendees: {$in: user._id } } ]
+    }).populate("owner", "profilePicture username")
+
+    console.log(event)
+    res.status(200).json(event)
+  } catch (error) {
+    next(error)
+  }
+})
 
 //POST
 // POST /api/event/ -> Creates a new event
