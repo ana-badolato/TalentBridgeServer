@@ -22,15 +22,25 @@ router.get("/", async (req, res, next) => {
 
 })
 
-//GET /api/event/:eventid -> Returns the details of an event
-router.get("/:eventid", async (req, res, next) =>{
+// GET /api/event/:eventid -> Returns the details of an event
+router.get("/:eventid", async (req, res, next) => {
   try {
     const response = await Event.findById(req.params.eventid)
-    res.status(200).json(response)
+      .populate({
+        path: 'relatedProjects', // Popula el campo relatedProjects
+        populate: {
+          path: 'owner', // Dentro de relatedProjects, popula el campo owner
+          select: 'username profilePicture' // Solo trae los campos necesarios
+        }
+      });
+
+    res.status(200).json(response);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
+
+
 
 // GET /api/event/user/eventsuser -> Returns an array of events by authenticated user
 router.get("/user/eventsuser", isAuthenticated, async (req, res, next)=>{
