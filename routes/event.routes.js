@@ -30,15 +30,22 @@ router.get("/:eventid", async (req, res, next) => {
         path: 'relatedProjects', // Popula el campo relatedProjects
         populate: {
           path: 'owner', // Dentro de relatedProjects, popula el campo owner
-          select: 'username profilePicture' // Solo trae los campos necesarios
+          select: 'username profilePicture bio' // Solo trae los campos necesarios
         }
+      })
+      .populate('owner', 'profilePicture username bio') // Popula el owner directamente del evento
+      .populate({
+        path: 'lecturer', // Popula el campo lecturer
+        select: 'username profilePicture bio' // Solo trae los campos necesarios
       });
 
+    console.log("Datos del evento con populate:", response);
     res.status(200).json(response);
   } catch (error) {
     next(error);
   }
 });
+
 
 
 
