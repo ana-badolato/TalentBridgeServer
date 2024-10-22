@@ -24,7 +24,7 @@ router.get("/", async(req, res, next) => {
 router.get("/:projectid", async (req, res, next) => {
   try {
     const response = await Project.findById(req.params.projectid)
-      .populate('teamMembers', 'username profilePicture') // Reemplaza los IDs de teamMembers con sus documentos completos, solo obteniendo 'username' y 'profilePicture'
+      .populate('teamMembers', 'username profilePicture bio') // Reemplaza los IDs de teamMembers con sus documentos completos, solo obteniendo 'username' y 'profilePicture'
       .populate('owner', 'username profilePicture'); // También haz populate de owner para obtener el nombre de usuario e imagen
 
     res.status(200).json(response);
