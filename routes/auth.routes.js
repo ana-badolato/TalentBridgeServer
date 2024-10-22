@@ -118,13 +118,33 @@ router.post("/login", async (req, res, next) => {
 })
 
 //* GET  /auth/verify  -  Used to verify JWT stored on the client
-router.get("/verify", isAuthenticated, (req, res, next) => {
-  // If JWT token is valid the payload gets decoded by the
-  // isAuthenticated middleware and is made available on `req.payload`
-  console.log(`req.payload`, req.payload);
+// router.get("/verify", isAuthenticated, (req, res, next) => {
+//   // If JWT token is valid the payload gets decoded by the
+//   // isAuthenticated middleware and is made available on `req.payload`
+//   console.log(`req.payload`, req.payload);
 
-  // Send back the token payload object containing the user data
-  res.status(200).json(req.payload);
+//   // Send back the token payload object containing the user data
+//   res.status(200).json(req.payload);
+// });
+
+router.get("/verify", isAuthenticated, async (req, res, next) => {
+  try {
+    // Obtenemos el _id del payload ya verificado
+    const userId = req.payload._id;
+
+    // Buscamos en la base de datos el usuario con su _id para obtener más detalles
+    const user = await User.findById(userId).select("_id username profilePicture"); // Seleccionamos solo los campos que necesitas
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Enviamos la información del usuario como respuesta
+    res.status(200).json(user); // Devolvemos el _id, username y profilePicture
+  } catch (error) {
+    next(error);
+  }
 });
+
 
 module.exports = router;
