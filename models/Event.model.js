@@ -12,7 +12,7 @@ const eventSchema = new Schema(
       maxlength: 250,
     },
     description: {
-      type: [String],
+      type: String,
       maxlength: 1000,
     },
     date: {
