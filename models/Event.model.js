@@ -85,7 +85,8 @@ const eventSchema = new Schema(
       },
     },
     atendees:{
-      type: [Schema.Types.ObjectId]
+      type: [Schema.Types.ObjectId],
+      ref: "User"
     },
     relatedProjects: {
       type: Schema.Types.ObjectId,
