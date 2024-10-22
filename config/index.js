@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.use(
     cors({
       origin: [MONGODB_URI],
-    })//! modificar si metemos chat
+    })
   );
 
   // In development environment the app logs
