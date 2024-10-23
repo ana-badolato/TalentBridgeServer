@@ -141,6 +141,30 @@ router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
   }
 })
 
+// PUT /event/:eventId/join -> Permite que un usuario se una a un evento
+router.put("/:eventId/join", isAuthenticated, async (req, res, next) => {
+  try {
+    const { eventId } = req.params;
+    const { atendeeId } = req.body;
+
+    // Buscar el evento
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Evento no encontrado" });
+    }
+
+    // Añadir al asistente al evento
+    if (!event.atendees.includes(atendeeId)) {  // Reemplazamos atendees por el nombre correcto
+      event.atendees.push(atendeeId); // Agregar el usuario a la lista de asistentes
+      await event.save();
+      return res.status(200).json({ message: "Te has unido al evento", event });
+    } else {
+      return res.status(400).json({ message: "Ya eres asistente del evento" });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 //*ROUTES PATCH
 //PATCH  /api/event/:eventid/removelecturer/:userid -> Removes a lecturer from an event
@@ -171,7 +195,7 @@ router.patch("/:eventid/addlecturer/:userid", isAuthenticated, async (req, res, 
   }
 })
 
-// PATCH /api/event/:eventid/addatendees/:userid -> Adds an attendee to an event
+// PATCH /api/event/:eventid/addatendees/:userid -> Adds an atendee to an event
 router.patch("/:eventid/addatendees/:userid", isAuthenticated, async (req, res, next)=>{
   console.log(req.params.userid, req.params.eventid)
   try {
