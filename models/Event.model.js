@@ -10,6 +10,7 @@ const eventSchema = new Schema(
     mainObjective: {
       type: String,
       maxlength: 250,
+      required: [true, "The main objective is required"]
     },
     description: {
       type: String,
