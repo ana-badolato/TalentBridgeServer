@@ -100,7 +100,7 @@ router.post("/", isAuthenticated, async(req,res,next)=>{
       ticketRequired: req.body.ticketRequired,
       price: req.body.price,
       posterImage: req.body.posterImage,
-      owner:req.body.owner,
+      owner:req.payload._id,
       lecturer: req.body.lecturer,
       atendees: req.body.atendees,
       relatedProjects: req.body.relatedProjects,
@@ -119,6 +119,7 @@ router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
   try {
     const response = await Event.findByIdAndUpdate(req.params.eventid,{
       name: req.body.name,
+      mainObjective: req.body.mainObjective,
       description: req.body.description,
       date:req.body.date,
       time: req.body.time,
@@ -130,7 +131,6 @@ router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
       ticketRequired: req.body.ticketRequired,
       price: req.body.price,
       posterImage: req.body.posterImage,
-      owner:req.body.owner,
       lecturer: req.body.lecturer,
       atendees: req.body.atendees,
       relatedProjects: req.body.relatedProjects

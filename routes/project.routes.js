@@ -103,7 +103,7 @@ router.post("/", isAuthenticated, async(req, res, next) => {
       startDate: req.body.startDate,
       image: req.body.image,
       category: req.body.category,
-      owner: req.body.owner,
+      owner: req.payload._id,
       teamMembers: req.body.teamMembers
     })
     res.status(201).json(response)

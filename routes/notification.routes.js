@@ -26,7 +26,7 @@ router.get("/:userid", isAuthenticated, async (req, res, next) => {
 router.post("/", isAuthenticated, async (req, res, next) => {
   try {
     const response = await Notification.create({
-      from: req.body.from,
+      from: req.payload._id,
       to: req.body.to,
       project: req.body.project,
       event: req.body.event,
