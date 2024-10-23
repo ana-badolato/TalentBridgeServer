@@ -210,6 +210,18 @@ router.patch("/:eventid/addatendees/:userid", isAuthenticated, async (req, res, 
   }
 })
 
+//PATCH /api/event/:eventid/incrementcapacitycounter -> +1 to capacity counter
+router.patch("/:eventid/incrementcapacitycounter", async (req, res, next)=>{
+  try {
+    const response = await Event.findByIdAndUpdate(req.params.eventid,
+      { $inc: {capacityCounter: 1} }, 
+    {new: true})
+    res.status(200).json(response)
+  } catch (error) {
+    next(error)
+  }
+})
+
 
 //*ROUTES DELETE
 //DELETE /api/event/:eventid -> Deletes an event
