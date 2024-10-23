@@ -46,7 +46,15 @@ router.get("/:eventid", async (req, res, next) => {
   }
 });
 
-
+// GET /api/event/category/:category -> returns an array of events by category
+router.get("/category/:category", async (req, res, next) => {
+  try {
+    const events = await Event.find({ category: req.params.category });
+    res.status(200).json(events);
+  } catch (error) {
+    next(error)
+  }
+})
 
 
 // GET /api/event/user/eventsuser -> Returns an array of events by authenticated user
