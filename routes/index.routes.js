@@ -20,4 +20,7 @@ router.use("/event", eventRouter)
 const notificationRouter = require("./notification.routes")
 router.use("/notification", notificationRouter)
 
+const uploadRoutes = require("./upload.routes");
+router.use("/upload", uploadRoutes);
+
 module.exports = router;
