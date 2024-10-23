@@ -38,6 +38,7 @@ const userSchema = new Schema(
     bio: {
       type: String,
       maxlength: 250,
+      required: true,
     }
 //! Añadir chats y messages. 
   },
