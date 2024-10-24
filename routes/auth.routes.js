@@ -133,7 +133,7 @@ router.get("/verify", isAuthenticated, async (req, res, next) => {
     const userId = req.payload._id;
 
     // Buscamos en la base de datos el usuario con su _id para obtener más detalles
-    const user = await User.findById(userId).select("_id username profilePicture"); // Seleccionamos solo los campos que necesitas
+    const user = await User.findById(userId).select("_id username profilePicture contactEmail"); // Seleccionamos solo los campos que necesitas
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

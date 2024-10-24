@@ -23,4 +23,7 @@ router.use("/notification", notificationRouter)
 const uploadRoutes = require("./upload.routes");
 router.use("/upload", uploadRoutes);
 
+const emailRoutes = require ("./email.routes")
+router.use("/sendemail", emailRoutes)
+
 module.exports = router;
