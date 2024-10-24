@@ -8,11 +8,12 @@ const eventSchema = new Schema(
       required: [true, "Name is required."],
     },
     mainObjective: {
-      type: [String],
+      type: String,
       maxlength: 250,
+      required: [true, "The main objective is required"]
     },
     description: {
-      type: [String],
+      type: String,
       maxlength: 1000,
     },
     date: {
@@ -72,7 +73,7 @@ const eventSchema = new Schema(
     },
     posterImage:{
       type: String,
-      default: "https://schemazone.com/wp-content/uploads/2021/03/Project-Manager.jpg"
+      default: "https://res.cloudinary.com/drqiultmd/image/upload/v1729707730/fibd808bw4dixushxoln.png"
     },
     owner: {
       type: Schema.Types.ObjectId,
@@ -87,7 +88,8 @@ const eventSchema = new Schema(
       },
     },
     atendees:{
-      type: [Schema.Types.ObjectId]
+      type: [Schema.Types.ObjectId],
+      ref: "User"
     },
     relatedProjects: {
       type: Schema.Types.ObjectId,

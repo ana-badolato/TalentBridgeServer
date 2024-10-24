@@ -20,6 +20,11 @@ const notificationSchema = new Schema(
    },
     message: {
       type: String
+    },
+    type: { // Agregar el campo 'type'
+      type: String,
+      required: true, // Campo requerido
+      enum: ["action", "info"], // Valores permitidos
     }
   })
 

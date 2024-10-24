@@ -25,7 +25,7 @@ const projectSchema = new Schema(
     },
     image: {
       type: String,
-      default: "https://schemazone.com/wp-content/uploads/2021/03/Project-Manager.jpg"
+      default: "https://res.cloudinary.com/drqiultmd/image/upload/v1729707730/vzupen0uk9ctuhtatn2q.png"
     },
     category: {
       type: String,

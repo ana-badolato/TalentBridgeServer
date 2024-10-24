@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.use(
     cors({
       origin: [FRONTEND_URL],
-    })//! modificar si metemos chat
+    })
   );
 
   // In development environment the app logs
