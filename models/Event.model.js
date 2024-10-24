@@ -71,7 +71,7 @@ const eventSchema = new Schema(
     },
     posterImage:{
       type: String,
-      default: "https://schemazone.com/wp-content/uploads/2021/03/Project-Manager.jpg"
+      default: "https://res.cloudinary.com/drqiultmd/image/upload/v1729707730/fibd808bw4dixushxoln.png"
     },
     owner: {
       type: Schema.Types.ObjectId,
