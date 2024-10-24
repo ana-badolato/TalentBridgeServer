@@ -1,12 +1,14 @@
 const express = require('express');
 const sgMail = require('@sendgrid/mail');
+const { isAuthenticated } = require('../middleware/jwt.middleware');
 const router = express.Router();
 
 // Configura SendGrid con la API Key
+console.log('SENDGRID_API_KEY:', process.env.SENDGRID_API_KEY);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // POST Ruta per enviar correus
-router.post('/', async (req, res) => {
+router.post('/',isAuthenticated, async (req, res) => {
     const { senderEmail, recipientEmail, subject, message } = req.body;
 
     const msg = {
