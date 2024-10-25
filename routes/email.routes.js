@@ -12,8 +12,8 @@ router.post('/',isAuthenticated, async (req, res) => {
     const { senderEmail, recipientEmail, subject, message } = req.body;
 
     const msg = {
-        to: recipientEmail,        // Correu electrònic del destinatari
-        from: senderEmail,        // Correu electrònic de l'emissor
+        to: recipientEmail,
+        from: senderEmail,
         subject: subject,
         text: message,
     };

@@ -9,7 +9,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 
 //* ROUTES GET
-// GET /api/user/ -> all users
+// GET /api/user/ -> Returns an array of all users
 router.get("/", async (req, res, next)=>{
   User.find({})
   try {
@@ -20,7 +20,7 @@ router.get("/", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/profile -> user details with id
+// GET /api/user/profile -> Returns de details of a profile
 router.get("/profile", isAuthenticated, async (req, res, next)=>{
   try {
     const response = await User.findById(req.payload._id);
@@ -30,7 +30,7 @@ router.get("/profile", isAuthenticated, async (req, res, next)=>{
   }
 })
 
-// GET /api/user/profile/:username -> user details with id
+// GET /api/user/profile/:username -> Returns the details of a user
 router.get("/profile/:username", async (req, res, next)=>{
   try {
     const response = await User.findOne({ username: req.params.username });
@@ -40,7 +40,7 @@ router.get("/profile/:username", async (req, res, next)=>{
   }
 })
 
-// GET /api/user/project/:projectid -> all project's users
+// GET /api/user/project/:projectid -> Returns an array of users by project
 router.get("/project/:projectid", async (req, res, next) => {
   try {
     

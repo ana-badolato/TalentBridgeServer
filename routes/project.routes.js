@@ -8,7 +8,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const User = require("../models/User.model.js");
 
 //* ROUTES GET
-// GET /api/project/ -> see all projects, public
+// GET /api/project/ -> Returns an array of all projects
 router.get("/", async(req, res, next) => {
   try {
     const response = await Project.find().populate("owner", "profilePicture username ") 
@@ -20,7 +20,7 @@ router.get("/", async(req, res, next) => {
 });
 
 
-// GET /api/project/:projectid -> project detail, public
+// GET /api/project/:projectid -> Returns de details of a project
 router.get("/:projectid", async (req, res, next) => {
   try {
     const response = await Project.findById(req.params.projectid)
@@ -34,8 +34,7 @@ router.get("/:projectid", async (req, res, next) => {
 });
 
 
-
-// GET /api/project/category/:category -> returns an array of projects by category
+// GET /api/project/category/:category -> Returns an array of projects by category
 router.get("/category/:category", async (req, res, next) => {
   try {
     const projects = await Project.find({ category: req.params.category });
@@ -46,7 +45,7 @@ router.get("/category/:category", async (req, res, next) => {
 })
 
 
-//GET /api/project/:projectid/event -> returns an array of events by project
+//GET /api/project/:projectid/event -> Returns an array of events by project
 router.get("/:projectid/event", async (req, res, next) =>{
   try {
     const events = await Event.find({relatedProjects: req.params.projectid})

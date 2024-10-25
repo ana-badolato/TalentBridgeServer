@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const Event = require("../models/Event.model");
-const Project = require("../models/Project.model");
 const User = require("../models/User.model.js");
 
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
@@ -149,7 +148,7 @@ router.put("/:eventid", isAuthenticated, async (req, res, next) =>{
   }
 })
 
-// PUT /event/:eventId/join -> Permite que un usuario se una a un evento
+// PUT /event/:eventId/join -> Allows a user to join an event
 router.put("/:eventId/join", isAuthenticated, async (req, res, next) => {
   try {
     const { eventId } = req.params;
